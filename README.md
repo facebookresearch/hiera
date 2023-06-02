@@ -1,0 +1,161 @@
+# Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles
+[![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](https://creativecommons.org/licenses/by-nc/4.0/)
+
+This is the official implementation for our ICML 2023 Oral paper:  
+**[Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles][arxiv-link]**  
+[Chaitanya Ryali](https://scholar.google.com/citations?user=4LWx24UAAAAJ)\*,
+[Yuan-Ting Hu](https://scholar.google.com/citations?user=aMpbemkAAAAJ)\*,
+[Daniel Bolya](https://scholar.google.com/citations?hl=en&user=K3ht_ZUAAAAJ)\*,
+[Chen Wei](https://scholar.google.com/citations?hl=en&user=LHQGpBUAAAAJ),
+[Haoqi Fan](https://scholar.google.com/citations?hl=en&user=76B8lrgAAAAJ),
+[Po-Yao Huang](https://scholar.google.com/citations?hl=en&user=E8K25LIAAAAJ),
+[Vaibhav Aggarwal](https://scholar.google.com/citations?hl=en&user=Qwm6ZOYAAAAJ),
+[Arkabandhu Chowdhury](https://scholar.google.com/citations?hl=en&user=42v1i_YAAAAJ),
+[Omid Poursaeed](https://scholar.google.com/citations?hl=en&user=Ugw9DX0AAAAJ),
+[Judy Hoffman](https://scholar.google.com/citations?hl=en&user=mqpjAt4AAAAJ),
+[Jitendra Malik](https://scholar.google.com/citations?hl=en&user=oY9R5YQAAAAJ),
+[Yanghao Li](https://scholar.google.com/citations?hl=en&user=-VgS8AIAAAAJ)\*,
+[Christoph Feichtenhofer](https://scholar.google.com/citations?hl=en&user=UxuqG1EAAAAJ)\*  
+_[ICML '23 Oral][icml-link]_ | _[GitHub](https://github.com/facebookresearch/hiera)_ | _[arXiv][arxiv-link]_ | _[BibTeX](https://github.com/facebookresearch/hiera#citation)_
+
+\*: Equal contribution.
+
+## What is Hiera?
+**Hiera** is a _hierarchical_ vision transformer that is fast, powerful, and, above all, _simple_. It outperforms the state-of-the-art across a wide array of image and video tasks _while being much faster_. 
+
+<p align="center">
+  <img src="https://github.com/facebookresearch/hiera/raw/main/examples/img/inference_speed.png" width="75%">
+</p>
+
+## How does it work?
+![A diagram of Hiera's architecture.](https://github.com/facebookresearch/hiera/raw/main/examples/img/hiera_arch.png)
+
+Vision transformers like [ViT](https://arxiv.org/abs/2010.11929) use the same spatial resolution and number of features throughout the whole network. But this is inefficient: the early layers don't need that many features, and the later layers don't need that much spatial resolution. Prior hierarchical models like [ResNet](https://arxiv.org/abs/1512.03385) accounted for this by using fewer features at the start and less spatial resolution at the end.
+
+Several domain specific vision transformers have been introduced that employ this hierarchical design, such as [Swin](https://arxiv.org/abs/2103.14030) or [MViT](https://arxiv.org/abs/2104.11227). But in the pursuit of state-of-the-art results using fully supervised training on ImageNet-1K, these models have become more and more complicated as they add specialized modules to make up for spatial biases that ViTs lack. While these changes produce effective models with attractive FLOP counts, under the hood the added complexity makes these models _slower_ overall.
+
+We show that a lot of this bulk is actually _unnecessary_. Instead of manually adding spatial bases through architectural changes, we opt to _teach_ the model these biases instead. By training with [MAE](https://arxiv.org/abs/2111.06377), we can simplify or remove _all_ of these bulky modules in existing transformers and _increase accuracy_ in the process. The result is Hiera, an extremely efficient and simple architecture that outperforms the state-of-the-art in several image and video recognition tasks.
+
+## News
+ - **[2023.06.01]** Initial release.
+
+
+## Installation
+
+Hiera requires a reasonably recent version of [torch](https://pytorch.org/get-started/locally/).
+After that, you can install hiera through [pip](https://pypi.org/project/hiera-transformer/0.1.0/):
+```bash
+pip install hiera-transformer
+```
+This repo _should_ support the latest timm version, but timm is a constantly updating package. Create an issue if you have problems with a newer version of timm.
+
+### Installing from Source
+
+If using [torch hub](#model-zoo), you don't need to install the `hiera` package. But, if you'd like to develop using hiera, it could be a good idea to install it from source:
+
+```bash
+git clone https://github.com/facebookresearch/hiera.git
+cd hiera
+python setup.by build develop
+```
+
+
+## Model Zoo
+
+Here we provide model checkpoints for Hiera. Each model listed is accessible on [torch hub](https://pytorch.org/docs/stable/hub.html), e.g.:
+```py
+model = torch.hub.load("facebookresearch/hiera", model="hiera_base_224")
+```
+The model name is the same as the checkpoint name.
+
+**Note:** the speeds listed here were benchmarked _without_ PyTorch's optimized [scaled dot product attention](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html). If using PyTorch 2.0 or above, your inference speed will probably be faster than what's listed here.
+
+#### Coming Soon
+As of now, base finetuned models are available. The rest are coming soon.
+
+### Image Models
+| Model    | Input Size | Pretrained Models<br>(IN-1K MAE) | Finetuned Models<br>(IN-1K Supervised) | IN-1K<br>Top-1 (%) | A100 fp16<br>Speed (im/s) |
+|----------|:----------:|---------------------------------|----------------------------|:------------------:|:-------------------------:|
+| Hiera-T  |   224x224  | [mae_hiera_tiny_224](#coming-soon)          | [hiera_tiny_224](#coming-soon)         |        82.8        |            2758           |
+| Hiera-S  |   224x224  | [mae_hiera_small_224](#coming-soon)         | [hiera_small_224](#coming-soon)        |        83.8        |            2211           |
+| Hiera-B  |   224x224  | [mae_hiera_base_224](#coming-soon)          | [hiera_base_224](https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth)         |        84.5        |            1556           |
+| Hiera-B+ |   224x224  | [mae_hiera_base_plus_224](#coming-soon)     | [hiera_base_plus_224](#coming-soon)    |        85.2        |            1247           |
+| Hiera-L  |   224x224  | [mae_hiera_large_224](#coming-soon)         | [hiera_large_224](#coming-soon)        |        86.1        |            531            |
+| Hiera-H  |   224x224  | [mae_hiera_huge_224](#coming-soon)          | [hiera_huge_224](#coming-soon)         |        86.9        |            274            |
+### Video Models
+| Model    | Input Size | Pretrained Models<br>(K400 MAE) | Finetuned Models<br>(K400) | K400 (3x5 views)<br>Top-1 (%) | A100 fp16<br>Speed (clip/s) |
+|----------|:----------:|---------------------------------|----------------------------|:-----------------------------:|:---------------------------:|
+| Hiera-B  | 16x224x224 | Coming Soon                     | [hiera_base_16x224](https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth)      |              84.0             |            133.6            |
+| Hiera-B+ | 16x224x224 | Coming Soon                     | [hiera_base_plus_16x224](#coming-soon) |              85.0             |             84.1            |
+| Hiera-L  | 16x224x224 | Coming Soon                     | [hiera_large_16x224](#coming-soon)     |              87.3             |             40.8            |
+| Hiera-H  | 16x224x224 | Coming Soon                     | [hiera_huge_16x224](#coming-soon)      |              87.8             |             20.9            |
+
+
+
+## Usage
+
+This repo implements the code to run Hiera models for inference. This repository is still in progress. Here's what we currently have available and what we have planned:
+
+ - [x] Image Inference
+    - [x] MAE implementation
+ - [x] Video Inference
+    - [ ] MAE implementation
+ - [ ] Training scripts
+ - [ ] Full Model Zoo
+
+
+See [examples](https://github.com/facebookresearch/hiera/tree/main/examples) for examples of how to use Hiera.
+
+### Inference
+
+See [examples/inference](https://github.com/facebookresearch/hiera/blob/main/examples/inference.ipynb) for an example of how to prepare the data for inference.
+
+Instantiate a model with either [torch hub](#model-zoo) or by [installing hiera](#installing-from-source) and running:
+```py
+import hiera
+model = hiera.hiera_base_224(pretrained=True)
+```
+Then you can run inference like any other model:
+```py
+output = model(x)
+```
+Video inference works the same way, just use a `16x224` model instead.
+
+**Note**: for efficiency, Hiera re-orders its tokens at the start of the network (see the `Roll` and `Unroll` modules in `hiera_utils.py`). Thus, tokens _aren't in spatial order_ by default. If you'd like to use intermediate feature maps for a downstream task, pass the `return_intermediates` flag when running the model:
+```py
+output, intermediates = model(img_norm[None, ...], return_intermediates=True)
+```
+
+### Benchmarking
+We provide a script for easy benchmarking. See [examples/benchmark](https://github.com/facebookresearch/hiera/blob/main/examples/benchmark.ipynb) to see how to use it.
+
+#### Scaled Dot Product Attention
+PyTorch 2.0 introduced optimized [scaled dot product attention](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html), which can speed up transformers quite a bit. We didn't use this in our original benchmarking, but since it's a free speed-up this repo will automatically use it if available. To get its benefits, make sure your torch version is 2.0 or above.
+
+### Training
+
+Coming soon.
+
+
+## Citation
+If you use Hiera or this code in your work, please cite:
+```
+@article{ryali2023hiera,
+  title={Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles},
+  author={Ryali, Chaitanya and Hu, Yuan-Ting and Bolya, Daniel and Wei, Chen and Fan, Haoqi and Huang, Po-Yao and Aggarwal, Vaibhav and Chowdhury, Arkabandhu and Poursaeed, Omid and Hoffman, Judy and Malik, Jitendra and Li, Yanghao and Feichtenhofer, Christoph},
+  journal={ICML},
+  year={2023}
+}
+```
+
+### License
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
+
+[![CC BY-NC 4.0](https://licensebuttons.net/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
+
+### Contributing
+See [contributing](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md).
+
+[arxiv-link]: https://arxiv.org/abs/2306.00989/
+[icml-link]: https://icml.cc/Conferences/2023
