@@ -19,25 +19,40 @@
 # --------------------------------------------------------
 
 import math
-from typing import List, Tuple, Optional, Type, Callable
+from typing import List, Tuple, Optional, Type, Callable, Dict
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 
-def pretrained_model(checkpoint: str) -> Callable:
-    """ Loads a Hiera model from a pretrained source (if pretrained=True). """
+def pretrained_model(checkpoints: Dict[str, str], default: str = None) -> Callable:
+    """ Loads a Hiera model from a pretrained source (if pretrained=True). Use "checkpoint" to specify the checkpoint. """
 
     def inner(model_func: Callable) -> Callable:
-        def model_def(pretrained: bool = False, **kwdargs) -> nn.Module:
-            model = model_func(**kwdargs)
-
+        def model_def(pretrained: bool = False, checkpoint: str = default, strict: bool = True, **kwdargs) -> nn.Module:
             if pretrained:
-                if checkpoint is None:
+                if checkpoints is None:
                     raise RuntimeError("This model currently doesn't have pretrained weights available.")
-                state_dict = torch.hub.load_state_dict_from_url(checkpoint, map_location="cpu")
-                model.load_state_dict(state_dict["model_state"])
+                elif checkpoint is None:
+                    raise RuntimeError("No checkpoint specified.")
+                elif checkpoint not in checkpoints:
+                    raise RuntimeError(f"Invalid checkpoint specified ({checkpoint}). Options are: {list(checkpoints.keys())}.")
+
+                state_dict = torch.hub.load_state_dict_from_url(checkpoints[checkpoint], map_location="cpu")
+            
+                if "head.projection.weight" in state_dict["model_state"]:
+                    # Set the number of classes equal to the state_dict only if the user doesn't want to overwrite it
+                    if "num_classes" not in kwdargs:
+                        kwdargs["num_classes"] = state_dict["model_state"]["head.projection.weight"].shape[0]
+                    # If the user specified a different number of classes, remove the projection weights or else we'll error out
+                    elif kwdargs["num_classes"] != state_dict["model_state"]["head.projection.weight"].shape[0]:
+                        del state_dict["model_state"]["head.projection.weight"]
+                        del state_dict["model_state"]["head.projection.bias"]
+
+            model = model_func(**kwdargs)
+            if pretrained:
+                model.load_state_dict(state_dict["model_state"], strict=strict)
             
             return model
 

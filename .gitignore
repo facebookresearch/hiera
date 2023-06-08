@@ -6,3 +6,4 @@ core
 build/
 dist/
 build.sh
+*.job

@@ -1,5 +1,4 @@
 # Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles
-[![CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](https://creativecommons.org/licenses/by-nc/4.0/)
 
 This is the official implementation for our ICML 2023 Oral paper:  
 **[Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles][arxiv-link]**  
@@ -56,7 +55,7 @@ If using [torch hub](#model-zoo), you don't need to install the `hiera` package.
 ```bash
 git clone https://github.com/facebookresearch/hiera.git
 cd hiera
-python setup.by build develop
+python setup.py build develop
 ```
 
 
@@ -64,9 +63,9 @@ python setup.by build develop
 
 Here we provide model checkpoints for Hiera. Each model listed is accessible on [torch hub](https://pytorch.org/docs/stable/hub.html), e.g.:
 ```py
-model = torch.hub.load("facebookresearch/hiera", model="hiera_base_224")
+model = torch.hub.load("facebookresearch/hiera", model="hiera_base_224", pretrained=True, checkpoint="mae_in1k_ft_in1k")
 ```
-The model name is the same as the checkpoint name.
+For model names and corresponding checkpoint names see below.
 
 **Note:** the speeds listed here were benchmarked _without_ PyTorch's optimized [scaled dot product attention](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html). If using PyTorch 2.0 or above, your inference speed will probably be faster than what's listed here.
 
@@ -74,22 +73,25 @@ The model name is the same as the checkpoint name.
 As of now, base finetuned models are available. The rest are coming soon.
 
 ### Image Models
-| Model    | Input Size | Pretrained Models<br>(IN-1K MAE) | Finetuned Models<br>(IN-1K Supervised) | IN-1K<br>Top-1 (%) | A100 fp16<br>Speed (im/s) |
-|----------|:----------:|---------------------------------|----------------------------|:------------------:|:-------------------------:|
-| Hiera-T  |   224x224  | [mae_hiera_tiny_224](#coming-soon)          | [hiera_tiny_224](#coming-soon)         |        82.8        |            2758           |
-| Hiera-S  |   224x224  | [mae_hiera_small_224](#coming-soon)         | [hiera_small_224](#coming-soon)        |        83.8        |            2211           |
-| Hiera-B  |   224x224  | [mae_hiera_base_224](#coming-soon)          | [hiera_base_224](https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth)         |        84.5        |            1556           |
-| Hiera-B+ |   224x224  | [mae_hiera_base_plus_224](#coming-soon)     | [hiera_base_plus_224](#coming-soon)    |        85.2        |            1247           |
-| Hiera-L  |   224x224  | [mae_hiera_large_224](#coming-soon)         | [hiera_large_224](#coming-soon)        |        86.1        |            531            |
-| Hiera-H  |   224x224  | [mae_hiera_huge_224](#coming-soon)          | [hiera_huge_224](#coming-soon)         |        86.9        |            274            |
-### Video Models
-| Model    | Input Size | Pretrained Models<br>(K400 MAE) | Finetuned Models<br>(K400) | K400 (3x5 views)<br>Top-1 (%) | A100 fp16<br>Speed (clip/s) |
-|----------|:----------:|---------------------------------|----------------------------|:-----------------------------:|:---------------------------:|
-| Hiera-B  | 16x224x224 | Coming Soon                     | [hiera_base_16x224](https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth)      |              84.0             |            133.6            |
-| Hiera-B+ | 16x224x224 | Coming Soon                     | [hiera_base_plus_16x224](#coming-soon) |              85.0             |             84.1            |
-| Hiera-L  | 16x224x224 | Coming Soon                     | [hiera_large_16x224](#coming-soon)     |              87.3             |             40.8            |
-| Hiera-H  | 16x224x224 | Coming Soon                     | [hiera_huge_16x224](#coming-soon)      |              87.8             |             20.9            |
+| Model    | Model Name            | Pretrained Models<br>(IN-1K MAE) | Finetuned Models<br>(IN-1K Supervised) | IN-1K<br>Top-1 (%) | A100 fp16<br>Speed (im/s) |
+|----------|-----------------------|----------------------------------|----------------------------------------|:------------------:|:-------------------------:|
+| Hiera-T  | `hiera_tiny_224`      | Coming Soon         | Coming Soon       |       82.8         |            2758           |
+| Hiera-S  | `hiera_small_224`     | Coming Soon         | Coming Soon       |       83.8         |            2211           |
+| Hiera-B  | `hiera_base_224`      | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth)       |       84.5         |            1556           |
+| Hiera-B+ | `hiera_base_plus_224` | Coming Soon         | Coming Soon       |       85.2         |            1247           |
+| Hiera-L  | `hiera_large_224`     | Coming Soon         | Coming Soon       |       86.1         |            531            |
+| Hiera-H  | `hiera_huge_224`      | Coming Soon         | Coming Soon       |       86.9         |            274            |
 
+Each model inputs a 224x224 image.
+### Video Models
+| Model    | Model Name               | Pretrained Models<br>(K400 MAE) | Finetuned Models<br>(K400) | K400 (3x5 views)<br>Top-1 (%) | A100 fp16<br>Speed (clip/s) |
+|----------|--------------------------|---------------------------------|----------------------------|:-----------------------------:|:---------------------------:|
+| Hiera-B  | `hiera_base_16x224`      | Coming Soon                     | [mae_k400_ft_k400](https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth)      |              84.0             |            133.6            |
+| Hiera-B+ | `hiera_base_plus_16x224` | Coming Soon                     | Coming Soon |              85.0             |             84.1            |
+| Hiera-L  | `hiera_large_16x224`     | Coming Soon                     | Coming Soon |              87.3             |             40.8            |
+| Hiera-H  | `hiera_huge_16x224`      | Coming Soon                     | Coming Soon |              87.8             |             20.9            |
+
+Each model inputs 16 224x224 frames with a temporal stride of 4.
 
 
 ## Usage
@@ -113,7 +115,7 @@ See [examples/inference](https://github.com/facebookresearch/hiera/blob/main/exa
 Instantiate a model with either [torch hub](#model-zoo) or by [installing hiera](#installing-from-source) and running:
 ```py
 import hiera
-model = hiera.hiera_base_224(pretrained=True)
+model = hiera.hiera_base_224(pretrained=True, checkpoint="mae_in1k_ft_in1k")
 ```
 Then you can run inference like any other model:
 ```py
@@ -123,7 +125,7 @@ Video inference works the same way, just use a `16x224` model instead.
 
 **Note**: for efficiency, Hiera re-orders its tokens at the start of the network (see the `Roll` and `Unroll` modules in `hiera_utils.py`). Thus, tokens _aren't in spatial order_ by default. If you'd like to use intermediate feature maps for a downstream task, pass the `return_intermediates` flag when running the model:
 ```py
-output, intermediates = model(img_norm[None, ...], return_intermediates=True)
+output, intermediates = model(x, return_intermediates=True)
 ```
 
 ### Benchmarking

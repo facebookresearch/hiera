@@ -9,7 +9,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="hiera-transformer",
-    version="0.1.0",
+    version="0.1.1.dev",
     author="Chaitanya Ryali, Daniel Bolya",
     url="https://github.com/facebookresearch/hiera",
     description="A fast, powerful, and simple hierarchical vision transformer",

@@ -446,7 +446,9 @@ def hiera_small_224(**kwdargs):
     return Hiera(embed_dim=96, num_heads=1, stages=(1, 2, 11, 2), **kwdargs)
 
 
-@pretrained_model("https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth")
+@pretrained_model({
+    "mae_in1k_ft_in1k": "https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth",
+}, default="mae_in1k_ft_in1k")
 def hiera_base_224(**kwdargs):
     return Hiera(embed_dim=96, num_heads=1, stages=(2, 3, 16, 3), **kwdargs)
 
@@ -468,7 +470,9 @@ def hiera_huge_224(**kwdargs):
 
 # Video models
 
-@pretrained_model("https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth")
+@pretrained_model({
+    "mae_k400_ft_k400": "https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth",
+}, default="mae_k400_ft_k400")
 def hiera_base_16x224(**kwdargs):
     return Hiera(
         num_classes=400,  # K400 has 400 classes
