@@ -473,9 +473,9 @@ def hiera_huge_224(**kwdargs):
 @pretrained_model({
     "mae_k400_ft_k400": "https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth",
 }, default="mae_k400_ft_k400")
-def hiera_base_16x224(**kwdargs):
+def hiera_base_16x224(num_classes: int = 400, **kwdargs):
     return Hiera(
-        num_classes=400,  # K400 has 400 classes
+        num_classes=num_classes,  # K400 has 400 classes
         input_size=(16, 224, 224),
         q_stride=(1, 2, 2),
         mask_unit_size=(1, 8, 8),
