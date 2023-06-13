@@ -436,12 +436,16 @@ class Hiera(nn.Module):
 
 # Image models
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k_ft_in1k": "https://dl.fbaipublicfiles.com/hiera/hiera_tiny_224.pth",
+}, default="mae_in1k_ft_in1k")
 def hiera_tiny_224(**kwdargs):
     return Hiera(embed_dim=96, num_heads=1, stages=(1, 2, 7, 2), **kwdargs)
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k_ft_in1k": "https://dl.fbaipublicfiles.com/hiera/hiera_small_224.pth",
+}, default="mae_in1k_ft_in1k")
 def hiera_small_224(**kwdargs):
     return Hiera(embed_dim=96, num_heads=1, stages=(1, 2, 11, 2), **kwdargs)
 
@@ -453,17 +457,23 @@ def hiera_base_224(**kwdargs):
     return Hiera(embed_dim=96, num_heads=1, stages=(2, 3, 16, 3), **kwdargs)
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k_ft_in1k": "https://dl.fbaipublicfiles.com/hiera/hiera_base_plus_224.pth",
+}, default="mae_in1k_ft_in1k")
 def hiera_base_plus_224(**kwdargs):
     return Hiera(embed_dim=112, num_heads=2, stages=(2, 3, 16, 3), **kwdargs)
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k_ft_in1k": "https://dl.fbaipublicfiles.com/hiera/hiera_large_224.pth",
+}, default="mae_in1k_ft_in1k")
 def hiera_large_224(**kwdargs):
     return Hiera(embed_dim=144, num_heads=2, stages=(2, 6, 36, 4), **kwdargs)
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k_ft_in1k": "https://dl.fbaipublicfiles.com/hiera/hiera_huge_224.pth",
+}, default="mae_in1k_ft_in1k")
 def hiera_huge_224(**kwdargs):
     return Hiera(embed_dim=256, num_heads=4, stages=(2, 6, 36, 4), **kwdargs)
 

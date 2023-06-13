@@ -36,8 +36,10 @@ Several domain specific vision transformers have been introduced that employ thi
 We show that a lot of this bulk is actually _unnecessary_. Instead of manually adding spatial bases through architectural changes, we opt to _teach_ the model these biases instead. By training with [MAE](https://arxiv.org/abs/2111.06377), we can simplify or remove _all_ of these bulky modules in existing transformers and _increase accuracy_ in the process. The result is Hiera, an extremely efficient and simple architecture that outperforms the state-of-the-art in several image and video recognition tasks.
 
 ## News
+ - **[2023.06.12]** Added more in1k models and some video examples, see inference.ipynb (v0.1.1).
  - **[2023.06.01]** Initial release.
 
+See the [changelog](https://github.com/facebookresearch/hiera/tree/main/CHANGELOG.md) for more details.
 
 ## Installation
 
@@ -75,12 +77,12 @@ As of now, base finetuned models are available. The rest are coming soon.
 ### Image Models
 | Model    | Model Name            | Pretrained Models<br>(IN-1K MAE) | Finetuned Models<br>(IN-1K Supervised) | IN-1K<br>Top-1 (%) | A100 fp16<br>Speed (im/s) |
 |----------|-----------------------|----------------------------------|----------------------------------------|:------------------:|:-------------------------:|
-| Hiera-T  | `hiera_tiny_224`      | Coming Soon         | Coming Soon       |       82.8         |            2758           |
-| Hiera-S  | `hiera_small_224`     | Coming Soon         | Coming Soon       |       83.8         |            2211           |
+| Hiera-T  | `hiera_tiny_224`      | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_tiny_224.pth)       |       82.8         |            2758           |
+| Hiera-S  | `hiera_small_224`     | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_small_224.pth)      |       83.8         |            2211           |
 | Hiera-B  | `hiera_base_224`      | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth)       |       84.5         |            1556           |
-| Hiera-B+ | `hiera_base_plus_224` | Coming Soon         | Coming Soon       |       85.2         |            1247           |
-| Hiera-L  | `hiera_large_224`     | Coming Soon         | Coming Soon       |       86.1         |            531            |
-| Hiera-H  | `hiera_huge_224`      | Coming Soon         | Coming Soon       |       86.9         |            274            |
+| Hiera-B+ | `hiera_base_plus_224` | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_base_plus_224.pth)  |       85.2         |            1247           |
+| Hiera-L  | `hiera_large_224`     | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_large_224.pth)      |       86.1         |            531            |
+| Hiera-H  | `hiera_huge_224`      | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_huge_224.pth)       |       86.9         |            274            |
 
 Each model inputs a 224x224 image.
 ### Video Models
