@@ -34,5 +34,10 @@ from .hiera_mae import (
     mae_hiera_large_224,
     mae_hiera_huge_224,
 
+    mae_hiera_base_16x224,
+    mae_hiera_base_plus_16x224,
+    mae_hiera_large_16x224,
+    mae_hiera_huge_16x224,
+
     MaskedAutoencoderHiera,
 )

@@ -52,6 +52,10 @@ def pretrained_model(checkpoints: Dict[str, str], default: str = None) -> Callab
 
             model = model_func(**kwdargs)
             if pretrained:
+                # Disable being strict when trying to load a encoder-decoder model into an encoder-only model
+                if "decoder_pos_embed" in state_dict["model_state"] and not hasattr(model, "decoder_pos_embed"):
+                    strict = False
+
                 model.load_state_dict(state_dict["model_state"], strict=strict)
             
             return model

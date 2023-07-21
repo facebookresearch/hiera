@@ -63,35 +63,37 @@ python setup.py build develop
 
 ## Model Zoo
 
-Here we provide model checkpoints for Hiera. Each model listed is accessible on [torch hub](https://pytorch.org/docs/stable/hub.html), e.g.:
+Here we provide model checkpoints for Hiera. Each model listed is accessible on [torch hub](https://pytorch.org/docs/stable/hub.html) even without the `hiera-transformer` package installed, e.g. the following initializes a base model pretrained and finetuned on ImageNet-1k:
 ```py
 model = torch.hub.load("facebookresearch/hiera", model="hiera_base_224", pretrained=True, checkpoint="mae_in1k_ft_in1k")
 ```
-For model names and corresponding checkpoint names see below.
+
+If you want a model with MAE pretraining only, you can replace the checkpoint with `"mae_in1k"`. Additionally, if you'd like to load the MAE decoder as well (e.g., to continue pretraining), add `mae_` the the start of the model name, e.g.:
+```py
+model = torch.hub.load("facebookresearch/hiera", model="mae_hiera_base_224", pretrained=True, checkpoint="mae_in1k")
+```
+**Note:** Our MAE models were trained with a _normalized pixel loss_. That means that the patches were normalized before the network had to predict them. If you want to visualize the predictions, you'll have to unnormalize them using the visible patches (which might work but wouldn't be perfect) or unnormalize them using the ground truth. For model more names and corresponding checkpoint names see below.
+
 
 **Note:** the speeds listed here were benchmarked _without_ PyTorch's optimized [scaled dot product attention](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html). If using PyTorch 2.0 or above, your inference speed will probably be faster than what's listed here.
-
-#### Coming Soon
-As of now, base finetuned models are available. The rest are coming soon.
-
 ### Image Models
 | Model    | Model Name            | Pretrained Models<br>(IN-1K MAE) | Finetuned Models<br>(IN-1K Supervised) | IN-1K<br>Top-1 (%) | A100 fp16<br>Speed (im/s) |
 |----------|-----------------------|----------------------------------|----------------------------------------|:------------------:|:-------------------------:|
-| Hiera-T  | `hiera_tiny_224`      | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_tiny_224.pth)       |       82.8         |            2758           |
-| Hiera-S  | `hiera_small_224`     | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_small_224.pth)      |       83.8         |            2211           |
-| Hiera-B  | `hiera_base_224`      | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth)       |       84.5         |            1556           |
-| Hiera-B+ | `hiera_base_plus_224` | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_base_plus_224.pth)  |       85.2         |            1247           |
-| Hiera-L  | `hiera_large_224`     | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_large_224.pth)      |       86.1         |            531            |
-| Hiera-H  | `hiera_huge_224`      | Coming Soon         | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_huge_224.pth)       |       86.9         |            274            |
+| Hiera-T  | `hiera_tiny_224`      | [mae_in1k](https://dl.fbaipublicfiles.com/hiera/mae_hiera_tiny_224.pth)        | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_tiny_224.pth)       |       82.8         |            2758           |
+| Hiera-S  | `hiera_small_224`     | [mae_in1k](https://dl.fbaipublicfiles.com/hiera/mae_hiera_small_224.pth)       | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_small_224.pth)      |       83.8         |            2211           |
+| Hiera-B  | `hiera_base_224`      | [mae_in1k](https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_224.pth)        | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_base_224.pth)       |       84.5         |            1556           |
+| Hiera-B+ | `hiera_base_plus_224` | [mae_in1k](https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_plus_224.pth)   | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_base_plus_224.pth)  |       85.2         |            1247           |
+| Hiera-L  | `hiera_large_224`     | [mae_in1k](https://dl.fbaipublicfiles.com/hiera/mae_hiera_large_224.pth)       | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_large_224.pth)      |       86.1         |            531            |
+| Hiera-H  | `hiera_huge_224`      | [mae_in1k](https://dl.fbaipublicfiles.com/hiera/mae_hiera_huge_224.pth)        | [mae_in1k_ft_in1k](https://dl.fbaipublicfiles.com/hiera/hiera_huge_224.pth)       |       86.9         |            274            |
 
 Each model inputs a 224x224 image.
 ### Video Models
 | Model    | Model Name               | Pretrained Models<br>(K400 MAE) | Finetuned Models<br>(K400) | K400 (3x5 views)<br>Top-1 (%) | A100 fp16<br>Speed (clip/s) |
 |----------|--------------------------|---------------------------------|----------------------------|:-----------------------------:|:---------------------------:|
-| Hiera-B  | `hiera_base_16x224`      | Coming Soon                     | [mae_k400_ft_k400](https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth)      |              84.0             |            133.6            |
-| Hiera-B+ | `hiera_base_plus_16x224` | Coming Soon                     | Coming Soon |              85.0             |             84.1            |
-| Hiera-L  | `hiera_large_16x224`     | Coming Soon                     | Coming Soon |              87.3             |             40.8            |
-| Hiera-H  | `hiera_huge_16x224`      | Coming Soon                     | Coming Soon |              87.8             |             20.9            |
+| Hiera-B  | `hiera_base_16x224`      | [mae_k400](https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_16x224.pth)       | [mae_k400_ft_k400](https://dl.fbaipublicfiles.com/hiera/hiera_base_16x224.pth)      |              84.0             |            133.6            |
+| Hiera-B+ | `hiera_base_plus_16x224` | [mae_k400](https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_plus_16x224.pth)  | [mae_k400_ft_k400](https://dl.fbaipublicfiles.com/hiera/hiera_base_plus_16x224.pth) |              85.0             |             84.1            |
+| Hiera-L  | `hiera_large_16x224`     | [mae_k400](https://dl.fbaipublicfiles.com/hiera/mae_hiera_large_16x224.pth)      | [mae_k400_ft_k400](https://dl.fbaipublicfiles.com/hiera/hiera_large_16x224.pth)     |              87.3             |             40.8            |
+| Hiera-H  | `hiera_huge_16x224`      | [mae_k400](https://dl.fbaipublicfiles.com/hiera/mae_hiera_huge_16x224.pth)       | [mae_k400_ft_k400](https://dl.fbaipublicfiles.com/hiera/hiera_huge_16x224.pth)      |              87.8             |             20.9            |
 
 Each model inputs 16 224x224 frames with a temporal stride of 4.
 
@@ -103,9 +105,9 @@ This repo implements the code to run Hiera models for inference. This repository
  - [x] Image Inference
     - [x] MAE implementation
  - [x] Video Inference
-    - [ ] MAE implementation
+    - [x] MAE implementation
+ - [x] Full Model Zoo
  - [ ] Training scripts
- - [ ] Full Model Zoo
 
 
 See [examples](https://github.com/facebookresearch/hiera/tree/main/examples) for examples of how to use Hiera.
@@ -129,6 +131,20 @@ Video inference works the same way, just use a `16x224` model instead.
 ```py
 output, intermediates = model(x, return_intermediates=True)
 ```
+
+#### MAE Inference
+By default, the models do not include the MAE decoder. If you would like to use the decoder or compute MAE loss, you can instantiate an mae version by running:
+```py
+import hiera
+model = hiera.mae_hiera_base_224(pretrained=True, checkpoint="mae_in1k")
+```
+Then when you run inference on the model, it will return a 4-tuple of `(loss, predictions, labels, mask)` where predictions and labels are for the _deleted tokens_ only. The returned mask will be `True` if the token is visible and `False` if it's deleted. You can change the masking ratio by passing it during inference:
+```py
+loss, preds, labels, mask = model(x, mask_ratio=0.6)
+```
+The default mask ratio is `0.6` for images, but you should pass in `0.9` for video. See the paper for details.
+
+**Note:** We use _normalized pixel targets_ for MAE pretraining, meaning the patches are each individually normalized before the model model has to predict them. Thus, you have to unnormalize them using the ground truth before visualizing them. See `get_pixel_label_2d` in `hiera_mae.py` for details.
 
 ### Benchmarking
 We provide a script for easy benchmarking. See [examples/benchmark](https://github.com/facebookresearch/hiera/blob/main/examples/benchmark.ipynb) to see how to use it.

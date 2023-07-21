@@ -161,6 +161,28 @@ class MaskedAutoencoderHiera(Hiera):
 
         return label
 
+    def get_pixel_label_3d(
+        self, input_vid: torch.Tensor, mask: torch.Tensor, norm: bool = True
+    ) -> torch.Tensor:
+        # mask (boolean tensor): True must correspond to *masked*
+
+        # We use time strided loss, only take the first frame from each token
+        input_vid = input_vid[:, :, ::self.patch_stride[0], :, :]
+
+        size = self.pred_stride
+        label = input_vid.unfold(3, size, size).unfold(4, size, size)
+        label = label.permute(0, 2, 3, 4, 5, 6, 1)  # Different from 2d, mistake during training lol
+        label = label.flatten(1, 3).flatten(2)
+        label = label[mask]
+
+        if norm:
+            mean = label.mean(dim=-1, keepdim=True)
+            var = label.var(dim=-1, keepdim=True)
+            label = (label - mean) / (var + 1.0e-6) ** 0.5
+
+        return label
+
+
     def forward_encoder(
         self, x: torch.Tensor, mask_ratio: float, mask: Optional[torch.Tensor] = None
     ) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -242,6 +264,8 @@ class MaskedAutoencoderHiera(Hiera):
         """
         if len(self.q_stride) == 2:
             label = self.get_pixel_label_2d(x, mask)
+        elif len(self.q_stride) == 3:
+            label = self.get_pixel_label_3d(x, mask)
         else:
             raise NotImplementedError
 
@@ -270,43 +294,105 @@ class MaskedAutoencoderHiera(Hiera):
 
 # Image Models
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_tiny_224.pth",
+}, default="mae_in1k")
 def mae_hiera_tiny_224(**kwargs):
     return MaskedAutoencoderHiera(
         embed_dim=96, num_heads=1, stages=(1, 2, 7, 2), q_pool=2, **kwargs,
     )
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_small_224.pth",
+}, default="mae_in1k")
 def mae_hiera_small_224(**kwargs):
     return MaskedAutoencoderHiera(
         embed_dim=96, num_heads=1, stages=(1, 2, 11, 2), q_pool=2, **kwargs,
     )
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_224.pth",
+}, default="mae_in1k")
 def mae_hiera_base_224(**kwargs):
     return MaskedAutoencoderHiera(
         embed_dim=96, num_heads=1, stages=(2, 3, 16, 3), q_pool=2, **kwargs,
     )
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_plus_224.pth",
+}, default="mae_in1k")
 def mae_hiera_base_plus_224(**kwargs):
     return MaskedAutoencoderHiera(
         embed_dim=112, num_heads=2, stages=(2, 3, 16, 3), q_pool=2, **kwargs,
     )
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_large_224.pth",
+}, default="mae_in1k")
 def mae_hiera_large_224(**kwargs):
     return MaskedAutoencoderHiera(
         embed_dim=144, num_heads=2, stages=(2, 6, 36, 4), q_pool=2, **kwargs,
     )
 
 
-@pretrained_model(None)
+@pretrained_model({
+    "mae_in1k": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_huge_224.pth",
+}, default="mae_in1k")
 def mae_hiera_huge_224(**kwargs):
     return MaskedAutoencoderHiera(
         embed_dim=256, num_heads=4, stages=(2, 6, 36, 4), q_pool=2, **kwargs,
+    )
+
+
+
+# Video Models
+
+@pretrained_model({
+    "mae_k400": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_16x224.pth",
+}, default="mae_k400")
+def mae_hiera_base_16x224(num_classes: int = 400, **kwdargs):
+    return MaskedAutoencoderHiera(
+        num_classes=num_classes,  # K400 has 400 classes
+        input_size=(16, 224, 224),
+        q_stride=(1, 2, 2),
+        mask_unit_size=(1, 8, 8),
+        patch_kernel=(3, 7, 7),
+        patch_stride=(2, 4, 4),
+        patch_padding=(1, 3, 3),
+        sep_pos_embed=True,
+        q_pool=2,
+        **kwdargs
+    )
+
+
+@pretrained_model({
+    "mae_k400": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_base_plus_16x224.pth",
+}, default="mae_k400")
+@pretrained_model(None)
+def mae_hiera_base_plus_16x224(**kwdargs):
+    return mae_hiera_base_16x224(
+        embed_dim=112, num_heads=2, stages=(2, 3, 16, 3), **kwdargs
+    )
+
+
+@pretrained_model({
+    "mae_k400": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_large_16x224.pth",
+}, default="mae_k400")
+@pretrained_model(None)
+def mae_hiera_large_16x224(**kwdargs):
+    return mae_hiera_base_16x224(
+        embed_dim=144, num_heads=2, stages=(2, 6, 36, 4), **kwdargs
+    )
+
+
+@pretrained_model({
+    "mae_k400": "https://dl.fbaipublicfiles.com/hiera/mae_hiera_huge_16x224.pth",
+}, default="mae_k400")
+def mae_hiera_huge_16x224(**kwdargs):
+    return mae_hiera_base_16x224(
+        embed_dim=256, num_heads=4, stages=(2, 6, 36, 4), **kwdargs
     )
