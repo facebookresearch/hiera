@@ -23,6 +23,7 @@ from .hiera import (
     MaskUnitAttention,
     Head,
     PatchEmbed,
+    HieraForImageClassification,
 )
 
 

@@ -7,3 +7,6 @@ build/
 dist/
 build.sh
 *.job
+
+# Environments
+env/

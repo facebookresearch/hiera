@@ -28,8 +28,9 @@ import torch.nn.functional as F
 
 from timm.models.layers import DropPath, Mlp
 
-from .hiera_utils import pretrained_model, conv_nd, do_pool, do_masked_conv, Unroll, Reroll
+from hiera_utils import pretrained_model, conv_nd, do_pool, do_masked_conv, Unroll, Reroll
 
+from huggingface_hub import PyTorchModelHubMixin
 
 
 class MaskUnitAttention(nn.Module):
@@ -225,12 +226,13 @@ class Hiera(nn.Module):
         patch_padding: Tuple[int, ...] = (3, 3),
         mlp_ratio: float = 4.0,
         drop_path_rate: float = 0.0,
-        norm_layer: nn.Module = partial(nn.LayerNorm, eps=1e-6),
         head_dropout: float = 0.0,
         head_init_scale: float = 0.001,
         sep_pos_embed: bool = False,
     ):
         super().__init__()
+
+        norm_layer: nn.Module = partial(nn.LayerNorm, eps=1e-6)
 
         depth = sum(stages)
         self.patch_stride = patch_stride
@@ -533,3 +535,9 @@ def hiera_huge_16x224(**kwdargs):
     return hiera_base_16x224(
         embed_dim=256, num_heads=4, stages=(2, 6, 36, 4), **kwdargs
     )
+
+
+# Hugging Face integration
+class HieraForImageClassification(Hiera, PyTorchModelHubMixin):
+    def __init__(self, config: dict):
+        super().__init__(**config)
