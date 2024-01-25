@@ -30,7 +30,7 @@ state_dict = torch.hub.load_state_dict_from_url("https://dl.fbaipublicfiles.com/
 model.load_state_dict(state_dict["model_state"])
 
 # save locally
-# model.save_pretrained("hiera-tiny-224")
+# model.save_pretrained("hiera-tiny-224", config=config)
 
 # save to huggingface hub
 # model.push_to_hub("nielsr/hiera-tiny-224", config=config)
