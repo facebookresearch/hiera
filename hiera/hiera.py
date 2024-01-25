@@ -18,6 +18,7 @@
 # timm: https://github.com/rwightman/pytorch-image-models/tree/master/timm
 # --------------------------------------------------------
 
+import importlib.util
 import math
 from functools import partial
 from typing import List, Tuple, Callable, Optional
@@ -28,9 +29,15 @@ import torch.nn.functional as F
 
 from timm.models.layers import DropPath, Mlp
 
-from hiera_utils import pretrained_model, conv_nd, do_pool, do_masked_conv, Unroll, Reroll
+from .hiera_utils import pretrained_model, conv_nd, do_pool, do_masked_conv, Unroll, Reroll
 
-from huggingface_hub import PyTorchModelHubMixin
+
+def is_huggingface_hub_available():
+    return importlib.util.find_spec("huggingface_hub") is not None
+
+
+if is_huggingface_hub_available():
+    from huggingface_hub import PyTorchModelHubMixin
 
 
 class MaskUnitAttention(nn.Module):
@@ -535,7 +542,6 @@ def hiera_huge_16x224(**kwdargs):
     return hiera_base_16x224(
         embed_dim=256, num_heads=4, stages=(2, 6, 36, 4), **kwdargs
     )
-
 
 # Hugging Face integration
 class HieraForImageClassification(Hiera, PyTorchModelHubMixin):
