@@ -19,7 +19,18 @@ if is_huggingface_hub_available():
 else:
     # Empty class in case modelmixins dont exist
     class PyTorchModelHubMixin:
-        pass
+        
+        @classmethod
+        def from_pretrained(cls, *args, **kwdargs):
+            raise RuntimeError("This feature requires `huggingface-hub` to be installed.")
+        
+        @classmethod
+        def save_pretrained(cls, *args, **kwdargs):
+            raise RuntimeError("This feature requires `huggingface-hub` to be installed.")
+        
+        @classmethod
+        def push_to_hub(cls, *args, **kwdargs):
+            raise RuntimeError("This feature requires `huggingface-hub` to be installed.")
 
 
 
