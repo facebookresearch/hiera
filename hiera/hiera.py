@@ -20,7 +20,7 @@
 
 import math
 from functools import partial
-from typing import List, Tuple, Callable, Optional
+from typing import List, Tuple, Callable, Optional, Union
 
 import torch
 import torch.nn as nn
@@ -29,7 +29,7 @@ import torch.nn.functional as F
 from timm.models.layers import DropPath, Mlp
 
 from .hiera_utils import pretrained_model, conv_nd, do_pool, do_masked_conv, Unroll, Reroll
-
+from .hiera_hfhub import has_config, PyTorchModelHubMixin
 
 
 class MaskUnitAttention(nn.Module):
@@ -204,7 +204,8 @@ class PatchEmbed(nn.Module):
         return x
 
 
-class Hiera(nn.Module):
+class Hiera(nn.Module, PyTorchModelHubMixin):
+    @has_config
     def __init__(
         self,
         input_size: Tuple[int, ...] = (224, 224),
@@ -225,12 +226,16 @@ class Hiera(nn.Module):
         patch_padding: Tuple[int, ...] = (3, 3),
         mlp_ratio: float = 4.0,
         drop_path_rate: float = 0.0,
-        norm_layer: nn.Module = partial(nn.LayerNorm, eps=1e-6),
+        norm_layer: Union[str, nn.Module] = "LayerNorm",
         head_dropout: float = 0.0,
         head_init_scale: float = 0.001,
         sep_pos_embed: bool = False,
     ):
         super().__init__()
+
+        # Do it this way to ensure that the init args are all PoD (for config usage)
+        if isinstance(norm_layer, str):
+            norm_layer = partial(getattr(nn, norm_layer), eps=1e-6)
 
         depth = sum(stages)
         self.patch_stride = patch_stride

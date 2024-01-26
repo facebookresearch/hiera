@@ -63,6 +63,8 @@ python setup.py build develop
 
 ## Model Zoo
 
+### Torch Hub
+
 Here we provide model checkpoints for Hiera. Each model listed is accessible on [torch hub](https://pytorch.org/docs/stable/hub.html) even without the `hiera-transformer` package installed, e.g. the following initializes a base model pretrained and finetuned on ImageNet-1k:
 ```py
 model = torch.hub.load("facebookresearch/hiera", model="hiera_base_224", pretrained=True, checkpoint="mae_in1k_ft_in1k")
@@ -74,8 +76,21 @@ model = torch.hub.load("facebookresearch/hiera", model="mae_hiera_base_224", pre
 ```
 **Note:** Our MAE models were trained with a _normalized pixel loss_. That means that the patches were normalized before the network had to predict them. If you want to visualize the predictions, you'll have to unnormalize them using the visible patches (which might work but wouldn't be perfect) or unnormalize them using the ground truth. For model more names and corresponding checkpoint names see below.
 
+### Hugging Face Hub
 
-**Note:** the speeds listed here were benchmarked _without_ PyTorch's optimized [scaled dot product attention](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html). If using PyTorch 2.0 or above, your inference speed will probably be faster than what's listed here.
+This repo also has [🤗 hub](https://huggingface.co/docs/hub/index) support. With the `hiera-transformer` and `huggingface-hub` packages installed, you can simply run, e.g.,
+```py
+from hiera import Hiera
+model = hiera.from_pretrained("facebook/hiera-base-224") # Load default version
+model = hiera.from_pretrained("facebook/hiera-base-224@mae-in1k-ft-in1k") # Load a specific checkpoint
+```
+to load a model. Use the model name as the repo and the checkpoint name as the branch.
+
+If you want to save a model, use `model.config` as the config, e.g.,
+```py
+model.save_pretrained("hiera-base-224", config=model.config)
+```
+
 ### Image Models
 | Model    | Model Name            | Pretrained Models<br>(IN-1K MAE) | Finetuned Models<br>(IN-1K Supervised) | IN-1K<br>Top-1 (%) | A100 fp16<br>Speed (im/s) |
 |----------|-----------------------|----------------------------------|----------------------------------------|:------------------:|:-------------------------:|
@@ -97,6 +112,7 @@ Each model inputs a 224x224 image.
 
 Each model inputs 16 224x224 frames with a temporal stride of 4.
 
+**Note:** the speeds listed here were benchmarked _without_ PyTorch's optimized [scaled dot product attention](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html). If using PyTorch 2.0 or above, your inference speed will probably be faster than what's listed here.
 
 ## Usage
 
@@ -116,7 +132,7 @@ See [examples](https://github.com/facebookresearch/hiera/tree/main/examples) for
 
 See [examples/inference](https://github.com/facebookresearch/hiera/blob/main/examples/inference.ipynb) for an example of how to prepare the data for inference.
 
-Instantiate a model with either [torch hub](#model-zoo) or by [installing hiera](#installing-from-source) and running:
+Instantiate a model with either [torch hub](#model-zoo) or [🤗 hub](#model-zoo) or by [installing hiera](#installing-from-source) and running:
 ```py
 import hiera
 model = hiera.hiera_base_224(pretrained=True, checkpoint="mae_in1k_ft_in1k")
