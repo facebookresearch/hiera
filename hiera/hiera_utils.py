@@ -60,6 +60,10 @@ def pretrained_model(checkpoints: Dict[str, str], default: str = None) -> Callab
             
             return model
 
+        # Keep some metadata so we can do things that require looping through all available models
+        model_def.checkpoints = checkpoints
+        model_def.default = default
+
         return model_def
     
     return inner

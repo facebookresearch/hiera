@@ -81,10 +81,9 @@ model = torch.hub.load("facebookresearch/hiera", model="mae_hiera_base_224", pre
 This repo also has [🤗 hub](https://huggingface.co/docs/hub/index) support. With the `hiera-transformer` and `huggingface-hub` packages installed, you can simply run, e.g.,
 ```py
 from hiera import Hiera
-model = hiera.from_pretrained("facebook/hiera-base-224") # Load default version
-model = hiera.from_pretrained("facebook/hiera-base-224@mae-in1k-ft-in1k") # Load a specific checkpoint
+model = hiera.from_pretrained("facebook/hiera-base-224") # Load default version (i.e., mae_in1k_ft_in1k)
 ```
-to load a model. Use the model name as the repo and the checkpoint name as the branch.
+to load a model.
 
 If you want to save a model, use `model.config` as the config, e.g.,
 ```py

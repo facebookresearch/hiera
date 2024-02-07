@@ -29,7 +29,7 @@ import torch.nn.functional as F
 from timm.models.layers import DropPath, Mlp
 
 from .hiera_utils import pretrained_model, conv_nd, do_pool, do_masked_conv, Unroll, Reroll
-from .hiera_hfhub import has_config, PyTorchModelHubMixin
+from .hfhub import has_config, PyTorchModelHubMixin
 
 
 class MaskUnitAttention(nn.Module):
