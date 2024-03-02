@@ -1,4 +1,7 @@
-### **[2024.02.07]** v0.1.3
+### **[2024.03.02]** v0.1.4
+ - License made more permissive! The license for the code has been changed to Apache 2.0. The license for the model remains as CC BY-NC 4.0, though (nothing we can do about that).
+
+### **[2024.03.01]** v0.1.3
  - Added support to save and load models to the huggingface hub, if huggingface_hub is installed.
  - Most Hiera models have been uploaded to HuggingFace.
 
