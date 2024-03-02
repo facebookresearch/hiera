@@ -29,7 +29,7 @@ if is_huggingface_hub_available():
 else:
     # Empty class in case modelmixins dont exist
     class PyTorchModelHubMixin:
-        error_str: str = "This feature requires `huggingface-hub >= 0.21.0` to be installed."
+        error_str: str = 'This feature requires "huggingface-hub >= 0.21.0" to be installed.'
 
         @classmethod
         def from_pretrained(cls, *args, **kwdargs):
