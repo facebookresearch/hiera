@@ -1,5 +1,12 @@
 # Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles
 
+[![Torch Hub Support](https://img.shields.io/badge/torch_hub-gray?logo=pytorch)](#torch-hub)
+[![HF Hub Support](https://img.shields.io/badge/%F0%9F%A4%97_huggingface_hub-gray)](#hugging-face-hub)
+[![Python Version](https://img.shields.io/pypi/pyversions/hiera-transformer.svg)](https://github.com/facebookresearch/hiera/releases)
+[![Github Release](https://img.shields.io/github/release/facebookresearch/hiera.svg)](https://github.com/facebookresearch/hiera/releases)
+[![Code License](https://img.shields.io/badge/code_license-Apache_2.0-olive)](https://opensource.org/licenses/Apache-2.0)
+[![Model License](https://img.shields.io/badge/model_zoo_license-CC_BY--NC_4.0-lightgrey)](https://opensource.org/licenses/Apache-2.0)
+
 This is the official implementation for our ICML 2023 Oral paper:  
 **[Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles][arxiv-link]**  
 [Chaitanya Ryali](https://scholar.google.com/citations?user=4LWx24UAAAAJ)\*,
@@ -36,6 +43,7 @@ Several domain specific vision transformers have been introduced that employ thi
 We show that a lot of this bulk is actually _unnecessary_. Instead of manually adding spatial bases through architectural changes, we opt to _teach_ the model these biases instead. By training with [MAE](https://arxiv.org/abs/2111.06377), we can simplify or remove _all_ of these bulky modules in existing transformers and _increase accuracy_ in the process. The result is Hiera, an extremely efficient and simple architecture that outperforms the state-of-the-art in several image and video recognition tasks.
 
 ## News
+ - **[2024.03.02]** License for the code has been made more permissive (Apache 2.0)! Model license remains unchanged.
  - **[2023.06.12]** Added more in1k models and some video examples, see inference.ipynb (v0.1.1).
  - **[2023.06.01]** Initial release.
 
@@ -62,6 +70,7 @@ python setup.py build develop
 
 
 ## Model Zoo
+Note that model weights are released under a separate license than the code. See the [model license](LICENSE.models) for more details.
 
 ### Torch Hub
 
