@@ -2,10 +2,11 @@
 
 [![Torch Hub Support](https://img.shields.io/badge/torch_hub-gray?logo=pytorch)](#torch-hub)
 [![HF Hub Support](https://img.shields.io/badge/%F0%9F%A4%97_huggingface_hub-gray)](#hugging-face-hub)
-[![Python Version](https://img.shields.io/pypi/pyversions/hiera-transformer.svg)](https://github.com/facebookresearch/hiera/releases)
+[![Torch Hub Support](https://img.shields.io/badge/PyPI-gray?logo=pypi&logoColor=lightblue)](https://pypi.org/project/hiera-transformer/)
+[![Python 3.6](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Github Release](https://img.shields.io/github/release/facebookresearch/hiera.svg)](https://github.com/facebookresearch/hiera/releases)
 [![Code License](https://img.shields.io/badge/code_license-Apache_2.0-olive)](https://opensource.org/licenses/Apache-2.0)
-[![Model License](https://img.shields.io/badge/model_zoo_license-CC_BY--NC_4.0-lightgrey)](https://opensource.org/licenses/Apache-2.0)
+[![Model License](https://img.shields.io/badge/model_zoo_license-CC_BY--NC_4.0-lightgrey)](https://creativecommons.org/licenses/by-nc/4.0/deed.en)
 
 This is the official implementation for our ICML 2023 Oral paper:  
 **[Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles][arxiv-link]**  
@@ -52,7 +53,7 @@ See the [changelog](https://github.com/facebookresearch/hiera/tree/main/CHANGELO
 ## Installation
 
 Hiera requires a reasonably recent version of [torch](https://pytorch.org/get-started/locally/).
-After that, you can install hiera through [pip](https://pypi.org/project/hiera-transformer/0.1.0/):
+After that, you can install hiera through [pip](https://pypi.org/project/hiera-transformer/):
 ```bash
 pip install hiera-transformer
 ```
