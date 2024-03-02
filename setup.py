@@ -9,11 +9,11 @@ from setuptools import find_packages, setup
 
 setup(
     name="hiera-transformer",
-    version="0.1.2",
+    version="0.1.3",
     author="Chaitanya Ryali, Daniel Bolya",
     url="https://github.com/facebookresearch/hiera",
     description="A fast, powerful, and simple hierarchical vision transformer",
-    install_requires=["torch>=1.8.1", "timm>=0.4.12", "tqdm"],
+    install_requires=["torch>=1.8.1", "timm>=0.4.12", "tqdm", "packaging"],
     packages=find_packages(exclude=("examples", "build")),
     license = 'CC BY-NC 4.0',
     long_description=open("README.md", "r", encoding="utf-8").read(),

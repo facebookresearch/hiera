@@ -1,3 +1,7 @@
+### **[2024.02.07]** v0.1.3
+ - Added support to save and load models to the huggingface hub, if huggingface_hub is installed.
+ - Most Hiera models have been uploaded to HuggingFace.
+
 ### **[2023.07.20]** v0.1.2
  - Released the full model zoo.
  - Added MAE functionality to the video models.
