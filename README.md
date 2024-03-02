@@ -195,10 +195,9 @@ If you use Hiera or this code in your work, please cite:
 ```
 
 ### License
-This work is licensed under a
-[Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
+The code for this work is licensed under the [Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0), while the model weights are licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
 
-[![CC BY-NC 4.0](https://licensebuttons.net/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
+See [LICENSE](LICENSE) for more details on the code license, and [LICENSE.models](LICENSE.models) for more details on the model weight license.
 
 ### Contributing
 See [contributing](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md).
